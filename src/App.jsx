@@ -1,5 +1,23 @@
+import { useEffect, useState } from "react";
+import Comment from "./components/Comment";
 import pizza from "./assets/pizza.jpg";
+
 function App() {
+  // api="https://react-mini-projects-api.classbon.com/Comments/1"
+  const [comments, setComments] = useState([])
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  async function fetchData() {
+    setLoading(true)
+    const response = await fetch("https://react-mini-projects-api.classbon.com/Comments/1")
+    const data = await response.json();
+    setComments(data)
+    setLoading(false)
+  }
+
   return (
     <div className="container pt-5">
       <div className="row">
@@ -42,14 +60,14 @@ function App() {
                   </div>
                 </div>
               </div>
-             
-                <button
-                  className="btn btn-info btn-shadow d-block w-100"
-                  type="submit"
-                >
-                  افزودن به سبد خرید
-                </button>
-            
+
+              <button
+                className="btn btn-info btn-shadow d-block w-100"
+                type="submit"
+              >
+                افزودن به سبد خرید
+              </button>
+
             </form>
             <h5 className="h6 mb-3 pb-3 border-bottom">
               پیتزا استیک (یک نفره)
@@ -64,7 +82,16 @@ function App() {
       </div>
       <hr />
       <div className="row">
-        <div className="col-12">
+        <div className="col-12 pt-5">
+          {loading ? (
+            <div className="d-flex justify-content-center">
+              <div className="spinner-border"></div>
+            </div>
+          ) : (
+            comments.map(comment => (
+              <Comment key={comment.id} {...comment} />
+            ))
+          )}
         </div>
       </div>
     </div>
